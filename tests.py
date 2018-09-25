@@ -4,6 +4,9 @@ import unittest
 
 from math import tanh
 
+def d_tanh(x):
+    return 1 - tanh(x)**2
+
 class TestActivation(unittest.TestCase):
 
     def setUp(self):
@@ -18,10 +21,16 @@ class TestActivation(unittest.TestCase):
         self.assertTrue(np.all(self.vec_in == self.vec_out))
 
     def test_identity_derivative(self):
-        vec_in = np.random.random((10, 1))
-        vec_out = np.empty((10, 1))
-        self.identity.derivative(vec_in, vec_out)
-        self.assertTrue(np.all(vec_out == np.ones_like(vec_out)))
+        self.identity.derivative(self.vec_in, self.vec_out)
+        self.assertTrue(np.all(self.vec_out == np.ones_like(self.vec_out)))
+
+    def test_tanh(self):
+        self.tanh.function(self.vec_in, self.vec_out)
+        self.assertTrue(np.all(self.vec_out == np.array([[tanh(1)],[tanh(2)],[tanh(3)]])))
+
+    def test_tanh_derivative(self):
+        self.tanh.derivative(self.vec_in, self.vec_out)
+        self.assertTrue(np.all(self.vec_out == np.array([[d_tanh(1)],[d_tanh(2)],[d_tanh(3)]])))
 
 
 if __name__ == '__main__':
