@@ -1,5 +1,5 @@
 
 class Layer:
-    def __init__(self, size, activation_function):
+    def __init__(self, size, activation):
         self.size = size
-        self.activation_function = activation_function
+        self.activation = activation

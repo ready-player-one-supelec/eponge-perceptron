@@ -1,15 +1,13 @@
-from numpy import np
-
+import numpy as np
 
 class Activation:
-    def __init__(self, activation_function, derivative):
-        self.activation_function = activation_function
+    def __init__(self, function, derivative):
+        self.function = function
         self.derivative = derivative
 
 
 def id_activation(vector, out):
-    np.copy(vector, out=out)
-
+    np.copyto(out, vector)
 
 def id_derivative(vector, out):
     out.fill(1)

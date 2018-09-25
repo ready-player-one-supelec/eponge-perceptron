@@ -47,7 +47,7 @@ class Model:
         # not DRY ¯\_(ツ)_/¯
         np.dot(self.weight_matrices[0], input_vec,
                out=self.values_before_activation[0])
-        layers[0].activation_function(
+        layers[0].activation.function(
             self.values_before_activation[0], out=self.values_after_activation[0])
 
         for layer, matrix, previous_value, before_act, after_act in zip(
@@ -58,5 +58,5 @@ class Model:
                 self.values_after_activation[1:]
         ):
             np.dot(matrix, previous_value, out=before_act)
-            layer.activation_function(before_act, out=after_act)
+            layer.activation.function(before_act, out=after_act)
         return self.values_after_activation[-1]
