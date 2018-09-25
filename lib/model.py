@@ -62,3 +62,12 @@ class Model:
             np.dot(matrix, previous_value, out=before_act)
             layer.activation.function(before_act, out=after_act)
         return self.values_after_activation[-1]
+
+    def save_weights(self, filename):
+        with open(filename, 'wb') as file :
+            pickle.dump(self.weight_matrices, file, protocol=0)
+
+    def import_weights(self, filename):
+        with open(filename, 'rb') as file :
+            weights = pickle.load(file)
+        self.initialize_from_weights(weights)
