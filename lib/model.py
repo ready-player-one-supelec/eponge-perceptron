@@ -16,10 +16,7 @@ class Model:
         self.layers.append(layer)
 
     def _initialize_vect(self):
-        self.values_before_activation.append(
-            np.empty((self.layers[0].size, 1)))
-        self.values_after_activation.append(np.empty((self.layers[0].size, 1)))
-        for precedent_layer, layer in zip(self.layers, self.layers[1:]):
+        for layer in self.layers:
             self.values_before_activation.append(np.empty((layer.size, 1)))
             self.values_after_activation.append(np.empty((layer.size, 1)))
 
