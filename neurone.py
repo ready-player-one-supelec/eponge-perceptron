@@ -11,15 +11,16 @@ class Layer :
         # neurones is the number of neurones of the current layer
         # activation is the activation function of this layer
 
-        self.weights = np.ones((neurones, entry + 1)) #+1 for the threshold
+        self.weights = np.ones((neurones, entry))
+        self.bias = np.ones(neurones)
         self.f = activation
         self.f_prim = diff_activation
         self.activation_level = np.zeros(neurones)
         self.output = np.zeros(neurones)
 
     def compute(self, Input) :
-        vec = np.append(Input, np.array([-1]))
-        self.activation_level = np.dot(self.weights, vec)
+        vec = np.array(Input)
+        self.activation_level = np.dot(self.weights, vec) - self.bias
         for i in range(len(self.output)) :
             self.output[i] = self.f(self.activation_level[i])
 
