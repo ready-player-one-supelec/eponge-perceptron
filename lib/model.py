@@ -20,15 +20,16 @@ class Model:
     def _initialize_vect(self):
         for layer in self.layers:
             self.values_before_activation.append(np.empty((layer.size, 1)))
-            self.values_after_activation.append(np.empty((layer.size, 1)))
+            self.values_after_activation.append(np.empty((layer.size + layer.bias, 1)))
+            self.values_after_activation[-1][-1,0] = 1
 
     def initialize_random(self):
         self._initialize_vect()
         weight_matrices.append(np.random.randn(
-            self.layers[0].size, self.input_size))
+            self.layers[0].size + self.layers[0].bias, self.input_size))
         for precedent_layer, layer in zip(self.layers, self.layers[1:]):
             self.weight_matrices.append(
-                np.random.randn(layer.size, precedent_layer.size))
+                np.random.randn(layer.size, precedent_layer.size + precedent_layer.bias))
 
     def initialize_from_weights(self, weights_list):
         assert len(weights_list) == len(
@@ -41,7 +42,7 @@ class Model:
                 self.layers
             ):
             assert weights.shape == (
-                layer.size, precedent_layer.size), "weight matrices are not the right size"
+                layer.size, precedent_layer.size + precedent_layer.bias), "weight matrices are not the right size"
             self.weight_matrices.append(weights)
 
     def infer(self, input_vec):
@@ -53,7 +54,7 @@ class Model:
                 self.values_after_activation
             ):
             np.dot(matrix, previous_value, out=before_act)
-            layer.activation.function(before_act, out=after_act)
+            layer.activation.function(before_act, out=after_act[:layer.size])
         return self.values_after_activation[-1]
 
     def save_weights(self, filename):
