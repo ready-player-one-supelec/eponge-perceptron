@@ -19,10 +19,13 @@ class Layer :
         self.output = np.zeros(neurones)
 
     def compute(self, Input) :
-        vec = np.array(Input)
-        self.activation_level = np.dot(self.weights, vec) - self.bias
+        self.activation_level = np.dot(self.weights, Input) - self.bias
         for i in range(len(self.output)) :
             self.output[i] = self.f(self.activation_level[i])
 
     def __len__(self) :
         return len(self.output)
+
+    def update(self, delta_weights, delta_bias) :
+        self.weights += delta_weights
+        self.bias += delta_bias
