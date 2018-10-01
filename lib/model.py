@@ -3,12 +3,14 @@ import pickle
 from itertools import chain
 
 from .layer import Layer
+from .error import quadratic, Error
 
 class Model:
 
-    def __init__(self, input_size : int, layers : list):
-        self.layers = layers
+    def __init__(self, input_size : int, layers : list, error_calc=quadratic):
+        self.layers: list[Layer] = layers
         self.input_size = input_size
+        self.error_calc: Error = error_calc
 
         self.weight_matrices = []
         self.values_before_activation = []
@@ -65,3 +67,19 @@ class Model:
         with open(filename, 'rb') as file :
             weights = pickle.load(file)
         self.initialize_from_weights(weights)
+    
+    def backpropagate(self, inffered, expected):
+        error = self.error_calc.error(
+            inffered, 
+            self.output_before_activation[-1], 
+            expected, 
+            self.layers[-1]
+        )
+        for prev_layer, after_act, before_act, weights in zip(
+                reversed(self.layers[:-1]),
+                reversed(self.values_after_activation[:-1]),
+                reversed(self.values_before_activation[:-1]),
+                reversed(self.weight_matrices)
+            ):
+            yield np.dot(after_act, np.transpose(before_act))
+            error = np.dot(np.transpose(weights), error) * layer.derivative
