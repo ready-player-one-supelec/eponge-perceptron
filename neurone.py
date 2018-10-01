@@ -25,9 +25,3 @@ class Layer :
 
     def __len__(self) :
         return len(self.output)
-
-
-
-
-layer1 = Layer(2, 1, sigmoid, sigmoid_prim)
-layer1.compute([2,1])
