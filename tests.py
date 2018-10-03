@@ -34,19 +34,28 @@ class TestActivation(unittest.TestCase):
 
 class TestModel1(unittest.TestCase):
     def setUp(self):
-        self.model = lib.model.Model(1,[
-            lib.layer.Layer(1, lib.activation.identity, bias=True)
+        self.model = lib.model.Model([
+            lib.layer.InputLayer(1),
+            lib.layer.Layer(1, lib.activation.identity)
         ])
         self.model.initialize_from_weights([np.array([[1]], dtype=np.float_)])
-    
+        
     def testForward(self):
         input_vec = np.array([[5]],dtype=np.float_)
-        output_vec = self.model.infer(input_vec)[:1]
+        output_vec = self.model.infer(input_vec)
         self.assertTrue(np.all(output_vec == input_vec))
+
+    def testBackward(self):
+        input_vec = np.array([[5]],dtype=np.float_)
+        output_vec = self.model.infer(input_vec)
+        expected =  np.array([[4]],dtype=np.float_)
+        for update in self.model.backpropagate(output_vec, expected):
+            print(update)
 
 class TestModel2(unittest.TestCase):
     def setUp(self):
-        self.model = lib.model.Model(1,[
+        self.model = lib.model.Model([
+            lib.layer.InputLayer(1),
             lib.layer.Layer(1, lib.activation.tanh),
             lib.layer.Layer(1, lib.activation.tanh)
         ])
@@ -59,7 +68,8 @@ class TestModel2(unittest.TestCase):
 
 class TestModel3(unittest.TestCase):
     def setUp(self):
-        self.model = lib.model.Model(2,[
+        self.model = lib.model.Model([
+            lib.layer.InputLayer(2),
             lib.layer.Layer(2, lib.activation.identity),
             lib.layer.Layer(1, lib.activation.identity)
         ])
