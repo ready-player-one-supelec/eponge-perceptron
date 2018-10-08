@@ -38,7 +38,7 @@ class Network :
         expected_output = np.array(expected_output)
         error = expected_output - self.layers[-1].output
         sensibilities = self.compute_sensibilities(error)
-        print(type(np.array(sensibilities[0])))
+
         delta_weights = []
         delta_weights.append(-self.learning_rate * np.outer(sensibilities[0],Input))
         for i in range(1,len(self.layers)) :
