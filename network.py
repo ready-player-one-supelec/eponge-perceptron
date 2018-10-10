@@ -3,13 +3,22 @@
 
 import numpy as np
 from outils import *
+import random
 from neurone import *
+import matplotlib.pyplot as plt
 
 class Network :
 
     def __init__(self, layers, learning_rate) :
         self.layers = layers
         self.learning_rate = learning_rate
+
+    def normalisation(self, Input) :
+        N = np.sqrt(np.dot(Input,Input))
+        if N == 0 :
+            return Input
+        else :
+            return Input / N
 
     def feed_forward(self, Input) :
         self.layers[0].compute(Input)
@@ -35,7 +44,6 @@ class Network :
         return sensibilities[::-1]
 
     def backpropagation(self, Input, expected_output) :
-        expected_output = np.array(expected_output)
         error = expected_output - self.layers[-1].output
         sensibilities = self.compute_sensibilities(error)
 
@@ -54,12 +62,12 @@ class Network :
     def learning(self, Input, expected_output) :
         Input = np.array(Input)
         expected_output = np.array(expected_output)
+        Input = self.normalisation(Input)
         self.feed_forward(Input)
         self.backpropagation(Input, expected_output)
 
-
-
-layer1 = Layer(2,2,sigmoid,sigmoid_prim)
-layer2 = Layer(2,1,sigmoid,sigmoid_prim)
-network = Network([layer1, layer2], 0.5)
-network.learning([2,1], [1])
+    def test(self, Input) :
+        Input = np.array(Input)
+        Input = self.normalisation(Input)
+        self.feed_forward(Input)
+        return self.layers[-1].output
