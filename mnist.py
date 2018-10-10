@@ -77,7 +77,9 @@ def results(times, training_failure_rate, test_failure_rate) :
     plt.ylabel("Taux d'erreur")
     plt.ylim(0,1)
     plt.title("Erreurs du réseau sur les échantillons de test et d'apprentissage")
-    plt.show()
+    plt.savefig("data/Graph/MNIST_trans.png", transparent= True)
+    plt.savefig("data/Graph/MNIST.png", transparent=False)
+    plt.show(block = False)
 
 
 
