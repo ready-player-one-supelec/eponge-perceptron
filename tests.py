@@ -2,35 +2,49 @@ import lib
 import numpy as np
 import unittest
 
-from math import tanh
+from math import tanh, exp
 
 def d_tanh(x):
     return 1 - tanh(x)**2
 
+def sigmoid(x):
+    return 1 / (1 + exp(-x))
+def d_sigmoid(x):
+    return sigmoid(x) * (1 - sigmoid(x))
+
 class TestActivation(unittest.TestCase):
 
     def setUp(self):
-        self.identity = lib.activation.identity
-        self.tanh = lib.activation.tanh
+        self.identity = lib.activation.Identity()
+        self.tanh = lib.activation.Tanh()
+        self.sigmoid = lib.activation.Sigmoid()
         self.vec_in = np.array([[1],[2],[3]])
         self.vec_out = np.empty((3,1))
 
-
     def test_identity(self):
+        #derivative
         self.identity.function(self.vec_in, self.vec_out)
         self.assertTrue(np.all(self.vec_in == self.vec_out))
-
-    def test_identity_derivative(self):
+        #function
         self.identity.derivative(self.vec_in, self.vec_out)
         self.assertTrue(np.all(self.vec_out == np.ones_like(self.vec_out)))
 
     def test_tanh(self):
+        #function
         self.tanh.function(self.vec_in, self.vec_out)
         self.assertTrue(np.all(self.vec_out == np.array([[tanh(1)],[tanh(2)],[tanh(3)]])))
-
-    def test_tanh_derivative(self):
+        #derivative
         self.tanh.derivative(self.vec_in, self.vec_out)
         self.assertTrue(np.all(self.vec_out == np.array([[d_tanh(1)],[d_tanh(2)],[d_tanh(3)]])))
+
+    def test_sigmoid(self):
+        #function
+        self.sigmoid.function(self.vec_in, self.vec_out)
+        self.assertTrue(np.all(self.vec_out == np.array([[sigmoid(1)],[sigmoid(2)],[sigmoid(3)]])))
+        #derivative
+        self.sigmoid.derivative(self.vec_in, self.vec_out)
+        self.assertTrue(np.all(self.vec_out == np.array([[d_sigmoid(1)],[d_sigmoid(2)],[d_sigmoid(3)]])))
+
 
 class TestModel1(unittest.TestCase):
     def setUp(self):
