@@ -23,6 +23,10 @@ class Model:
     def _initialize_vect(self):
         assert type(
             self.layers[0]) == InputLayer, 'you need in input as first layer'
+
+        self.values_before_activation = []
+        self.values_after_activation = []
+
         for layer in self.layers:
             self.values_before_activation.append(np.empty((layer.size, 1)))
             self.values_after_activation.append(
@@ -31,6 +35,7 @@ class Model:
 
     def initialize_random(self):
         self._initialize_vect()
+        self.weight_matrices = []
         for precedent_layer, layer in zip(self.layers, self.layers[1:]):
             self.weight_matrices.append(
                 np.random.randn(layer.size, precedent_layer.size + precedent_layer.bias) / precedent_layer.size)
