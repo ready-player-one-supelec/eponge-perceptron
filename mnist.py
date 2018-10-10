@@ -91,7 +91,7 @@ training_image = read_idx("data/MNIST/train-images-idx3-ubyte")
 training_label = read_idx("data/MNIST/train-labels-idx1-ubyte")
 test_image = read_idx("data/MNIST/t10k-images-idx3-ubyte")
 test_label = read_idx("data/MNIST/t10k-labels-idx1-ubyte")
-N = 10 # how many times the training algorithm is applied to the training dataset
+N = 100 # how many times the training algorithm is applied to the training dataset
 
 times = [i for i in range(1,N+1)]
 test_failure_rate = []
