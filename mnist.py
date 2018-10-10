@@ -9,7 +9,6 @@ import struct
 import matplotlib.pyplot as plt
 import save
 import random
-import matplotlib.pyplot as plt
 
 ############################################################################
 # MNIST

@@ -1,7 +1,6 @@
 #! /usr/bin/python3
 # -*- coding:utf-8 -*-
 
-import numpy as np
 import math
 
 hardlim = lambda x : int(x >= 0)

@@ -4,7 +4,6 @@
 import dill as pickle
 from network import *
 from neurone import *
-import marshal, types
 
 def save_network(network, filename) :
 

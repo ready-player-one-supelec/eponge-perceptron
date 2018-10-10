@@ -5,7 +5,6 @@ import numpy as np
 from outils import *
 import random
 from neurone import *
-import matplotlib.pyplot as plt
 
 class Network :
 

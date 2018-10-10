@@ -4,7 +4,7 @@
 from network import *
 from neurone import *
 from outils import *
-import numpy as np
+import random
 import matplotlib.pyplot as plt
 import save
 
