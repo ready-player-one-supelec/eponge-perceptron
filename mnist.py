@@ -62,10 +62,10 @@ def create_network() :
     network = Network([layer1,layer2,layer3], 0.005)
     return network
 
-training_image = read_idx("train-images-idx3-ubyte")
-training_label = read_idx("train-labels-idx1-ubyte")
-test_image = read_idx("t10k-images-idx3-ubyte")
-test_label = read_idx("t10k-labels-idx1-ubyte")
+training_image = read_idx("data/MNIST/train-images-idx3-ubyte")
+training_label = read_idx("data/MNIST/train-labels-idx1-ubyte")
+test_image = read_idx("data/MNIST/t10k-images-idx3-ubyte")
+test_label = read_idx("data/MNIST/t10k-labels-idx1-ubyte")
 
 times = [i for i in range(10)]
 test_failure_rate = []
