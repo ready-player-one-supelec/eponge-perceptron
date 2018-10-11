@@ -22,21 +22,37 @@ def graph(network) :
     plt.imshow(values, extent=[0,1,0,1], cmap='gray')
     plt.show()
 
-layer1 = Layer(2,4,sigmoid,sigmoid_prim, 0.01)
-layer2 = Layer(4,1,sigmoid,sigmoid_prim, 0.01)
-
-network = Network([layer1, layer2])
-
 banque_test= [([0,0], [0]), ([1,0], [1]), ([0,1], [1]), ([1,1],[0])]
 
 def f() :
-    for i in range(60000) :
+    for i in range(20000) :
         print(i)
         T = [0,1,2,3]
         random.shuffle(T)
         for j in T :
             network.learning(banque_test[T[j]][0],banque_test[T[j]][1])
     return (1- network.test([1,0]))**2 + network.test([1,1])**2 + network.test([0,0])**2 + (1-network.test([0,1]))**2
+
+layer1 = Layer(2,2,sigmoid,sigmoid_prim, 0.01)
+layer2 = Layer(2,1,sigmoid,sigmoid_prim, 0.01)
+
+layer1.set_weights(np.array([[1,1],[1,1]]),np.array([0,0]))
+layer2.set_weights(np.array([[1,1]]),np.array([0]))
+
+network = Network([layer1, layer2])
+
+print("test for 00 : ",network.test([1,1]))
+# network.learning([1,1],[0])
+# f()
+print("Layer 1 Weights : ",layer1.weights)
+print("Layer 1 Bias : ",layer1.bias)
+print("Layer 2 Weights : ",layer2.weights)
+print("Layer 2 Bias : ",layer2.bias)
+print("test for 00 : ",network.test([1,1]))
+
+exit()
+
+
 
 print(f())
 print(network.test([0,0]))
