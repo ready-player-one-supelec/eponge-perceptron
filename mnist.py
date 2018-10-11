@@ -42,7 +42,7 @@ def test_sample(network, test_image, test_label,times) :
         output = list(output)
         likely_number = output.index(max(output))
         if i % 100 == 0 :
-            print("Testing #{} - success :".format(times), success," - failures :", failure)
+            print("Testing #{} - success :".format(times), success,"- failures :", failure)
         if likely_number == int(test_label[i]) :
             success += 1
         else :
@@ -79,8 +79,6 @@ def results(times, training_failure_rate, test_failure_rate) :
     plt.title("Erreurs du réseau sur les échantillons de test et d'apprentissage")
     plt.savefig("data/Graph/MNIST_trans.png", transparent= True)
     plt.savefig("data/Graph/MNIST.png", transparent=False)
-    plt.show(block = False)
-
 
 
 #########################

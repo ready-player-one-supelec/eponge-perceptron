@@ -11,6 +11,9 @@ processors = 4
 # Max times
 Tmax = 8
 
+# We want the average on a given number of runs
+repeat = 5
+
 
 training_image = mnist.read_idx("data/MNIST/train-images-idx3-ubyte")
 training_label = mnist.read_idx("data/MNIST/train-labels-idx1-ubyte")
@@ -27,10 +30,12 @@ def doUrStuff(T) :
     global test_label
     global test_failure_rate
     global training_failure_rate
+    global repeat
     for t in T :
-        a,b = mnist.main(t, training_image, training_label, test_image, test_label)
-        test_failure_rate[t-1] = a
-        training_failure_rate[t-1] = b
+        for i in range(repeat) :
+            a,b = mnist.main(t, training_image, training_label, test_image, test_label)
+            test_failure_rate[t-1] += a
+            training_failure_rate[t-1] += b
     return test_failure_rate, training_failure_rate
 
 pool = Pool(processes = processors)
@@ -45,6 +50,11 @@ for result in results :
     for i in range(len(result[0])) :
         test_failure_rate[i] += result[0][i]
         training_failure_rate[i] += result[1][i]
+
+for i in range(len(test_failure_rate)) :
+    # We want an average but only made the sum by now
+    test_failure_rate[i] /= repeat
+    training_failure_rate[i] /= repeat
 
 print(test_failure_rate)
 print("-----")
