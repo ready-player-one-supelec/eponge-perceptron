@@ -22,10 +22,10 @@ def graph(network) :
     plt.imshow(values, extent=[0,1,0,1], cmap='gray')
     plt.show()
 
-layer1 = Layer(2,4,sigmoid,sigmoid_prim)
-layer2 = Layer(4,1,sigmoid,sigmoid_prim)
+layer1 = Layer(2,4,sigmoid,sigmoid_prim, 0.01)
+layer2 = Layer(4,1,sigmoid,sigmoid_prim, 0.01)
 
-network = Network([layer1, layer2], 0.01)
+network = Network([layer1, layer2])
 
 banque_test= [([0,0], [0]), ([1,0], [1]), ([0,1], [1]), ([1,1],[0])]
 

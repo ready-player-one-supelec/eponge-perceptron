@@ -8,9 +8,8 @@ from neurone import *
 
 class Network :
 
-    def __init__(self, layers, learning_rate) :
+    def __init__(self, layers) :
         self.layers = layers
-        self.learning_rate = learning_rate
 
     def normalisation(self, Input) :
         N = np.sqrt(np.dot(Input,Input))
@@ -47,13 +46,13 @@ class Network :
         sensibilities = self.compute_sensibilities(error)
 
         delta_weights = []
-        delta_weights.append(-self.learning_rate * np.outer(sensibilities[0],Input))
+        delta_weights.append(-self.layers[0].learning_rate * np.outer(sensibilities[0],Input))
         for i in range(1,len(self.layers)) :
-            delta_weights.append(-self.learning_rate * np.outer(sensibilities[i],self.layers[i-1].output))
+            delta_weights.append(-self.layers[i].learning_rate * np.outer(sensibilities[i],self.layers[i-1].output))
 
         delta_bias = []
         for i in range(len(self.layers)) :
-            delta_bias.append(self.learning_rate * sensibilities[i])
+            delta_bias.append(self.layers[i].learning_rate * sensibilities[i])
 
         for i in range(len(self.layers)) :
             self.layers[i].update(delta_weights[i], delta_bias[i])

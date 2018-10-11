@@ -6,7 +6,7 @@ from outils import *
 
 class Layer :
 
-    def __init__(self, entry, neurones, activation, diff_activation) :
+    def __init__(self, entry, neurones, activation, diff_activation, learning_rate) :
         # entry is the number of neurones of the previous layer
         # neurones is the number of neurones of the current layer
         # activation is the activation function of this layer
@@ -17,6 +17,7 @@ class Layer :
         self.f_prim = diff_activation
         self.activation_level = np.zeros(neurones)
         self.output = np.zeros(neurones)
+        self.learning_rate = learning_rate
 
     def compute(self, Input) :
         self.activation_level = np.dot(self.weights, Input) - self.bias
