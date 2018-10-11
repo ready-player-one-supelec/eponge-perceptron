@@ -7,8 +7,8 @@ from outils import *
 import numpy as np
 import struct
 import matplotlib.pyplot as plt
-import save
 import random
+import save
 
 ############################################################################
 # MNIST
@@ -58,21 +58,22 @@ def create_network() :
     return network
 
 
-def network_testing(times, training_image, training_label, test_image, test_label, test_failure_rate, training_failure_rate) :
+def network_testing(times, training_image, training_label, test_image, test_label) :
     network = create_network()
     learning(network, training_image, training_label, times)
     training_success, training_failure = test_sample(network, training_image, training_label, times)
     test_success, test_failure = test_sample(network, test_image, test_label, times)
-    test_failure_rate.append(test_failure / (test_success + test_failure))
-    training_failure_rate.append(training_failure / (training_success + training_failure))
-    return network
+    test_failure_rate = test_failure / (test_success + test_failure)
+    training_failure_rate = training_failure / (training_success + training_failure)
+    save.save_network(network, "data/Networks Saved/best_network_times{}".format(times))
+    return test_failure_rate, training_failure_rate
 
 
 def results(times, training_failure_rate, test_failure_rate) :
     plt.plot(times,training_failure_rate,'r-', label="Taux d'échec sur l'échantillon d'apprentissage")
     plt.plot(times, test_failure_rate, 'b-', label="Taux d'échec sur l'échantillon test")
     plt.legend()
-    plt.xlabel("Nombre de passage de l'échantillon d'apprentissage")
+    plt.xlabel("Nombre de passages de l'échantillon d'apprentissage")
     plt.ylabel("Taux d'erreur")
     plt.ylim(0,1)
     plt.title("Erreurs du réseau sur les échantillons de test et d'apprentissage")
@@ -86,24 +87,6 @@ def results(times, training_failure_rate, test_failure_rate) :
 # MAIN
 #########################
 
-training_image = read_idx("data/MNIST/train-images-idx3-ubyte")
-training_label = read_idx("data/MNIST/train-labels-idx1-ubyte")
-test_image = read_idx("data/MNIST/t10k-images-idx3-ubyte")
-test_label = read_idx("data/MNIST/t10k-labels-idx1-ubyte")
-N = 100 # how many times the training algorithm is applied to the training dataset
-
-times = [i for i in range(1,N+1)]
-test_failure_rate = []
-training_failure_rate = []
-networks = []
-
-for i in range(len(times)) :
-    network = network_testing(times[i], training_image, training_label, test_image, test_label, test_failure_rate, training_failure_rate)
-    networks.append(network)
-
-locate_min = test_failure_rate.index(min(test_failure_rate))
-t = times[locate_min]
-network = networks[locate_min]
-save.save_network(network, "data/Networks Saved/best_network_times{}".format(t))
-
-results(times, training_failure_rate, test_failure_rate)
+def main(times, training_image, training_label, test_image, test_label) :
+    test_failure_rate, training_failure_rate = network_testing(times, training_image, training_label, test_image, test_label)
+    return test_failure_rate, training_failure_rate
