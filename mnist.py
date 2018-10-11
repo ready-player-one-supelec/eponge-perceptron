@@ -54,7 +54,7 @@ def create_network() :
     layer1 = Layer(784, 100, sigmoid, sigmoid_prim, 0.005)
     layer2 = Layer(100, 50, sigmoid, sigmoid_prim, 0.005)
     layer3 = Layer(50,10, sigmoid, sigmoid_prim, 0.005)
-    network = Network([layer1,layer2,layer3])
+    network = Network([layer1,layer2,layer3], normalisation = True)
     return network
 
 

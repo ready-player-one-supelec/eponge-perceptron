@@ -8,11 +8,12 @@ from neurone import *
 
 class Network :
 
-    def __init__(self, layers) :
+    def __init__(self, layers, normalisation) :
         self.layers = layers
+        self.do_normalisation = normalisation # true or false
 
     def normalisation(self, Input) :
-        N = np.sqrt(np.dot(Input,Input))
+        N = np.amax(Input)
         if N == 0 :
             return Input
         else :
@@ -60,12 +61,14 @@ class Network :
     def learning(self, Input, expected_output) :
         Input = np.array(Input)
         expected_output = np.array(expected_output)
-        Input = self.normalisation(Input)
+        if self.do_normalisation :
+            Input = self.normalisation(Input)
         self.feed_forward(Input)
         self.backpropagation(Input, expected_output)
 
     def test(self, Input) :
         Input = np.array(Input)
-        Input = self.normalisation(Input)
+        if self.do_normalisation :
+            Input = self.normalisation(Input)
         self.feed_forward(Input)
         return self.layers[-1].output
