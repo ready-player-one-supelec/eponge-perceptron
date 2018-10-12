@@ -12,7 +12,7 @@ from matplotlib import cm
 import numpy as np
 
 
-def graph(network) :
+def map_XOR(network) :
     N = 100
     values = [[0.0 for i in range(N+1)] for j in range(N+1)]
     for i in range(N+1) :
@@ -22,7 +22,8 @@ def graph(network) :
     plt.imshow(values, extent=[0,1,1,0], cmap='gray')
     plt.show()
 
-def main(step, iteration, network, training_image, training_label, run) :
+
+def main(step, iteration, network, training_image, training_label, run, do_test) :
     liste = list(range(len(training_image)))
     random.shuffle(liste)
     print("Run #{} -".format(run),"Iteration :", iteration)
@@ -30,9 +31,10 @@ def main(step, iteration, network, training_image, training_label, run) :
         for e in liste :
             network.learning(training_image[e],training_label[e])
     error = 0
-    for i in range(len(training_image)) :
-        tmp = network.test(training_image[i]) - training_label[i]
-        error += tmp[0] ** 2
+    if do_test :
+        for i in range(len(training_image)) :
+            tmp = network.test(training_image[i]) - training_label[i]
+            error += tmp[0] ** 2
     return np.sqrt(error)
 
 
@@ -64,4 +66,3 @@ def graph3D(errors, iterations, learning_rates, runs, save_data) :
     fig.colorbar(surf, shrink=0.5, aspect=5)
     if save_data :
         save.save_data_for_3D_XOR(errors, iterations, learning_rates, runs, "data/Graph/graph3D_data")
-    plt.show()

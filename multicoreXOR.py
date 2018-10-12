@@ -18,7 +18,7 @@ runs = 8
 
 # Number of iterations
 step = 1000
-iterations = create_range(1000,2100,step)
+iterations = create_range(1000,60000,step)
 
 # Boolean : whether or not to change the learning_rate
 learning_rates_tab = create_range(0.01,0.1,0.01) # list of learning rates
@@ -37,26 +37,38 @@ def doUrStuff(run, learning_rate) :
     network = Network([layer1,layer2], False)
 
     for i in range(len(iterations)) :
-        error[i] += xor.main(step, iterations[i], network, training_image, training_label, run)
+        error[i] += xor.main(step, iterations[i], network, training_image, training_label, run, True)
     return error
 
-pool = Pool(processes = processors)
-# Global, not specific to a certain run
+def map_XOR() :
+    layer1 = Layer(2,2, regulated_tanh, regulated_tanh_prim, 0.05)
+    layer2 = Layer(2,1, regulated_tanh, regulated_tanh_prim, 0.05)
+    network = Network([layer1,layer2], False)
+    for i in iterations :
+        xor.main(step, i, network, training_image, training_label, 1, False)
+    xor.map_XOR(network)
 
-errors = []
-for j in learning_rates_tab :
-    error = [0] * len(iterations)
-    results = pool.starmap(doUrStuff, tuple([(i, j) for i in range(1,runs+1)]))
-    for result in results :
-        for i in range(len(result)) :
-            # We make the sum on all runs
-            error[i] += result[i]
-    for i in range(len(error)) :
-        # We want an average with the number of runs but only made the sum by now
-        error[i] /= runs
-    errors.append(error)
 
-if constant_learning_rate :
-    xor.graph2D(errors[0], iterations, learning_rates_tab[0], runs)
-else :
-    xor.graph3D(errors, iterations, learning_rates_tab, runs, True)
+def multicoreGraph() :
+    pool = Pool(processes = processors)
+    # Global, not specific to a certain run
+
+    errors = []
+    for j in learning_rates_tab :
+        error = [0] * len(iterations)
+        results = pool.starmap(doUrStuff, tuple([(i, j) for i in range(1,runs+1)]))
+        for result in results :
+            for i in range(len(result)) :
+                # We make the sum on all runs
+                error[i] += result[i]
+        for i in range(len(error)) :
+            # We want an average with the number of runs but only made the sum by now
+            error[i] /= runs
+        errors.append(error)
+
+    if constant_learning_rate :
+        xor.graph2D(errors[0], iterations, learning_rates_tab[0], runs)
+    else :
+        xor.graph3D(errors, iterations, learning_rates_tab, runs, True)
+
+multicoreGraph()
