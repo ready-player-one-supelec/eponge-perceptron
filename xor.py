@@ -36,7 +36,18 @@ def main(step, iteration, network, training_image, training_label, run) :
     return np.sqrt(error)
 
 
-def great_3Dgraph() :
+def graph2D(error, iterations, learning_rate, runs) :
+    fig = plt.figure()
+    plt.plot(iterations, error, 'b-', label="Learning rate = {}".format(learning_rate))
+    plt.legend()
+    plt.xlabel("Number of iterations")
+    plt.ylabel("Euclidian norm of the error (average with {} runs)".format(runs))
+    plt.title("2D graph of the error for a XOR neural network for a constant learning rate")
+    plt.savefig("data/Graph/XOR2D.png", transparent=False)
+    plt.savefig("data/Graph/XOR2D_trans.png", transparent= True)
+
+
+def graph3D() : # changing learning rates
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     learning_rate = create_range(0.01,0.1,0.01)
