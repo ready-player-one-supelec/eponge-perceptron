@@ -3,6 +3,7 @@
 
 import dill as pickle
 from network import *
+import xor
 from neurone import *
 
 def save_network(network, filename) :
@@ -28,3 +29,18 @@ def load_network(filename) :
         tab.append(new_layer)
     network = Network(tab)
     return network
+
+def save_data_for_3D_XOR(errors, iterations, learning_rates, runs, filename) :
+    X = {"errors" : errors, "iterations" : iterations, "learning_rates" : learning_rates, "runs": runs}
+    pickle.dump(X, open(filename, "wb"))
+
+def load_data_for_3D_XOR(filename) :
+    X = pickle.load(open(filename, "rb"))
+    errors = X["errors"]
+    iterations = X["iterations"]
+    learning_rates = X["learning_rates"]
+    runs = X["runs"]
+    print(iterations)
+    print(learning_rates)
+    print(errors)
+    xor.graph3D(errors, iterations, learning_rates, runs, False)

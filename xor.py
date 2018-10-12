@@ -48,16 +48,20 @@ def graph2D(error, iterations, learning_rate, runs) :
     plt.savefig("data/Graph/XOR2D_trans.png", transparent= True)
 
 
-def graph3D(errors, iterations, learning_rates, runs) :
+def graph3D(errors, iterations, learning_rates, runs, save_data) :
     # changing learning rates
-    errors = np.transpose(np.array(errors))
+    # save_data is a boolean : whether or not to save the errors to visualize later
+    # It is useful to ignore it if we just loaded some data
+    Z = np.transpose(np.array(errors))
     fig = plt.figure()
     ax = fig.gca(projection='3d')
-    learning_rates, iterations = np.meshgrid(learning_rates, iterations)
+    X, Y = np.meshgrid(learning_rates, iterations)
     ax.set_xlabel("Learning rate")
     ax.set_ylabel("Number of iterations")
     ax.set_zlabel("Euclidian norm of the error (average with {} runs)".format(runs))
     ax.set_title("3D graph of the error for a XOR neural network")
-    surf = ax.plot_surface(learning_rates, iterations, errors, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+    surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False)
     fig.colorbar(surf, shrink=0.5, aspect=5)
+    if save_data :
+        save.save_data_for_3D_XOR(errors, iterations, learning_rates, runs, "data/Graph/graph3D_data")
     plt.show()

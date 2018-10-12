@@ -59,4 +59,4 @@ for j in learning_rates_tab :
 if constant_learning_rate :
     xor.graph2D(errors[0], iterations, learning_rates_tab[0], runs)
 else :
-    xor.graph3D(errors, iterations, learning_rates_tab, runs)
+    xor.graph3D(errors, iterations, learning_rates_tab, runs, True)
