@@ -11,9 +11,6 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 import numpy as np
 
-###########################################################################
-# TEST DU XOR
-###########################################################################
 
 def graph(network) :
     N = 100
@@ -25,22 +22,18 @@ def graph(network) :
     plt.imshow(values, extent=[0,1,1,0], cmap='gray')
     plt.show()
 
-banque_test= [([0,0], [0]), ([1,0], [1]), ([0,1], [1]), ([1,1],[0])]
-
-def f(number_of_runs, learning_rate) :
-
-    layer1 = Layer(2,2,sigmoid,sigmoid_prim, learning_rate)
-    layer2 = Layer(2,1,sigmoid,sigmoid_prim, learning_rate)
-
-    network = Network([layer1, layer2], normalisation = False)
-
-    T = [0,1,2,3]
-    for i in range(number_of_runs) :
-        print(number_of_runs, i)
-        random.shuffle(T)
-        for j in T :
-            network.learning(banque_test[T[j]][0],banque_test[T[j]][1])
-    return (1- network.test([1,0]))**2 + network.test([1,1])**2 + network.test([0,0])**2 + (1-network.test([0,1]))**2
+def main(step, iteration, network, training_image, training_label, run) :
+    liste = list(range(len(training_image)))
+    random.shuffle(liste)
+    for a in range(step) :
+        for e in liste :
+            print("Run #{} -".format(run),"Iteration :", iteration)
+            network.learning(training_image[e],training_label[e])
+    error = 0
+    for i in range(len(training_image)) :
+        tmp = network.test(training_image[i]) - training_label[i]
+        error += tmp[0] ** 2
+    return np.sqrt(error)
 
 
 def great_3Dgraph() :
@@ -57,7 +50,7 @@ def great_3Dgraph() :
     learning_rate, number_of_runs = np.meshgrid(learning_rate, number_of_runs)
     ax.set_xlabel("Learning rate")
     ax.set_ylabel("Number of runs")
-    ax.set_zlabel("Euclidian norm of the error (average with 10 repetitions)")
+    ax.set_zlabel("Euclidian norm of the error (average with {} runs)".format(runs))
     ax.set_title("3D graph of the error for a XOR neural network")
     surf = ax.plot_surface(learning_rate, number_of_runs, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False)
     fig.colorbar(surf, shrink=0.5, aspect=5)
@@ -66,4 +59,7 @@ def great_3Dgraph() :
     plt.savefig("data/Graph/XOR3D_trans.png", transparent=True)
     plt.show()
 
-great_3Dgraph()
+
+
+
+# great_3Dgraph()
