@@ -11,8 +11,10 @@ class Layer :
         # neurones is the number of neurones of the current layer
         # activation is the activation function of this layer
 
-        self.weights = np.random.normal(size=[neurones,entry])
-        self.bias = np.random.normal(size=[neurones])
+        sigma = 1 / np.sqrt(entry)
+
+        self.weights = np.random.normal(0, sigma, size=[neurones,entry])
+        self.bias = np.random.normal(0, sigma, size=[neurones])
         self.f = activation
         self.f_prim = diff_activation
         self.activation_level = np.zeros(neurones)

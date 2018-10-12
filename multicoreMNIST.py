@@ -8,11 +8,11 @@ import numpy as np
 # Number of processors
 processors = 4
 
-# Max times
-Tmax = 8
+# Number of runs
+runs = 8
 
 # We want the average on a given number of runs
-repeat = 5
+iterations = 5
 
 
 training_image = mnist.read_idx("data/MNIST/train-images-idx3-ubyte")
@@ -20,8 +20,8 @@ training_label = mnist.read_idx("data/MNIST/train-labels-idx1-ubyte")
 test_image = mnist.read_idx("data/MNIST/t10k-images-idx3-ubyte")
 test_label = mnist.read_idx("data/MNIST/t10k-labels-idx1-ubyte")
 
-test_failure_rate = [0] * Tmax
-training_failure_rate = [0] * Tmax
+test_failure_rate = [0] * runs
+training_failure_rate = [0] * runs
 
 def doUrStuff(T) :
     global training_image
@@ -30,9 +30,9 @@ def doUrStuff(T) :
     global test_label
     global test_failure_rate
     global training_failure_rate
-    global repeat
+    global iterations
     for t in T :
-        for i in range(repeat) :
+        for i in range(iterations) :
             a,b = mnist.main(t, training_image, training_label, test_image, test_label)
             test_failure_rate[t-1] += a
             training_failure_rate[t-1] += b
@@ -41,8 +41,8 @@ def doUrStuff(T) :
 pool = Pool(processes = processors)
 
 # distributing times_tab to every core
-times = [i for i in range(1, Tmax + 1)]
-list_times_tab = tuple([[n, Tmax+1-n] for n in range(1,Tmax // 2 + 1)]) # all elements of this list are equivalent in terms of time complexity
+times = [i for i in range(1, runs + 1)]
+list_times_tab = tuple([[n, runs+1-n] for n in range(1,runs // 2 + 1)]) # all elements of this list are equivalent in terms of time complexity
 
 results = pool.map(doUrStuff, list_times_tab)
 
@@ -53,8 +53,8 @@ for result in results :
 
 for i in range(len(test_failure_rate)) :
     # We want an average but only made the sum by now
-    test_failure_rate[i] /= repeat
-    training_failure_rate[i] /= repeat
+    test_failure_rate[i] /= iterations
+    training_failure_rate[i] /= iterations
 
 print(test_failure_rate)
 print("-----")

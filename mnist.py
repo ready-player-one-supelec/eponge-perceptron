@@ -21,19 +21,19 @@ def read_idx(filename):
         return np.fromstring(f.read(), dtype=np.uint8).reshape(shape).astype(np.float_)
 
 
-def learning(network, training_image, training_label, times):
+def learning(network, training_image, training_label, runs):
     liste = list(range(len(training_image)))
-    for j in range(times) :
+    for j in range(runs) :
         random.shuffle(liste)
         for i,e in enumerate(liste) :
             if i % 100 == 0 :
-                print("Learning #{} -".format(times),"Times :", j, " - Data : ", i)
+                print("Learning #{} -".format(runs),"Times :", j, " - Data : ", i)
             t = [0] * 10
             t[int(training_label[e])] = 1
             network.learning(training_image[e].flatten(),t)
 
 
-def test_sample(network, test_image, test_label,times) :
+def test_sample(network, test_image, test_label,runs) :
     failure = 0
     success = 0
 
@@ -42,7 +42,7 @@ def test_sample(network, test_image, test_label,times) :
         output = list(output)
         likely_number = output.index(max(output))
         if i % 100 == 0 :
-            print("Testing #{} - success :".format(times), success,"- failures :", failure)
+            print("Testing #{} - success :".format(runs), success,"- failures :", failure)
         if likely_number == int(test_label[i]) :
             success += 1
         else :
@@ -58,20 +58,20 @@ def create_network() :
     return network
 
 
-def network_testing(times, training_image, training_label, test_image, test_label) :
+def network_testing(runs, training_image, training_label, test_image, test_label) :
     network = create_network()
-    learning(network, training_image, training_label, times)
-    training_success, training_failure = test_sample(network, training_image, training_label, times)
-    test_success, test_failure = test_sample(network, test_image, test_label, times)
+    learning(network, training_image, training_label, runs)
+    training_success, training_failure = test_sample(network, training_image, training_label, runs)
+    test_success, test_failure = test_sample(network, test_image, test_label, runs)
     test_failure_rate = test_failure / (test_success + test_failure)
     training_failure_rate = training_failure / (training_success + training_failure)
-    save.save_network(network, "data/Networks Saved/best_network_times{}".format(times))
+    save.save_network(network, "data/Networks Saved/best_network_times{}".format(runs))
     return test_failure_rate, training_failure_rate
 
 
-def results(times, training_failure_rate, test_failure_rate) :
-    plt.plot(times,training_failure_rate,'r-', label="Taux d'échec sur l'échantillon d'apprentissage")
-    plt.plot(times, test_failure_rate, 'b-', label="Taux d'échec sur l'échantillon test")
+def results(runs, training_failure_rate, test_failure_rate) :
+    plt.plot(runs,training_failure_rate,'r-', label="Taux d'échec sur l'échantillon d'apprentissage")
+    plt.plot(runs, test_failure_rate, 'b-', label="Taux d'échec sur l'échantillon test")
     plt.legend()
     plt.xlabel("Nombre de passages de l'échantillon d'apprentissage")
     plt.ylabel("Taux d'erreur")
@@ -85,6 +85,6 @@ def results(times, training_failure_rate, test_failure_rate) :
 # MAIN
 #########################
 
-def main(times, training_image, training_label, test_image, test_label) :
-    test_failure_rate, training_failure_rate = network_testing(times, training_image, training_label, test_image, test_label)
+def main(runs, training_image, training_label, test_image, test_label) :
+    test_failure_rate, training_failure_rate = network_testing(runs, training_image, training_label, test_image, test_label)
     return test_failure_rate, training_failure_rate
