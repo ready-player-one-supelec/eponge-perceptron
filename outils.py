@@ -24,3 +24,7 @@ def create_range(start,end,step) :
     # Can create range with non integer but float
     # Be careful, end is included unlike classical range functions
     return [start + i * step for i in range(int((end-start) // step) + 1)]
+
+
+regulated_tanh = lambda x : 1.7159 * tanh(2 * x / 3)
+regulated_tanh_prim = lambda x : 1.7159 * (2 / 3) * tanh_prim(2 * x / 3)
