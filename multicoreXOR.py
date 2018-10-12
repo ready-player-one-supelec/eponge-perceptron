@@ -18,10 +18,10 @@ runs = 8
 
 # Number of iterations
 step = 1000
-iterations = create_range(1000,10000,step)
+iterations = create_range(1000,2100,step)
 
 # Boolean : whether or not to change the learning_rate
-learning_rates_tab = create_range(0.01,0.01,0.01) # list of learning rates
+learning_rates_tab = create_range(0.01,0.1,0.01) # list of learning rates
 constant_learning_rate = len(learning_rates_tab) == 1
 
 
@@ -59,4 +59,4 @@ for j in learning_rates_tab :
 if constant_learning_rate :
     xor.graph2D(errors[0], iterations, learning_rates_tab[0], runs)
 else :
-    xor.graph3D(errors, iterations, learning_rates_tab)
+    xor.graph3D(errors, iterations, learning_rates_tab, runs)
