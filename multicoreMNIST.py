@@ -4,6 +4,10 @@
 from multiprocessing import Pool
 import mnist
 import numpy as np
+import os
+
+# Forcing numpy to be monothread to avoid over-threading
+os.environ['OPENBLAS_NUM_THREADS']='1'
 
 # Number of processors
 processors = 70

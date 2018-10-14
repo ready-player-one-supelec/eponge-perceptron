@@ -6,6 +6,10 @@ from network import *
 from outils import *
 from neurone import *
 import xor
+import os
+
+# Forcing numpy to be monothread to avoid over-threading
+os.environ['OPENBLAS_NUM_THREADS']='1'
 
 training_image = [[0,0], [1,0], [0,1], [1,1]]
 training_label = [[0],[1],[1],[0]]
