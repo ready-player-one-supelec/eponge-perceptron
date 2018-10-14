@@ -67,4 +67,4 @@ print(test_failure_rate)
 print("-----")
 print(training_failure_rate)
 
-mnist.results([i for i in range(iterations)], training_failure_rate, test_failure_rate)
+mnist.results([i for i in range(iterations)], training_failure_rate, test_failure_rate, runs)
