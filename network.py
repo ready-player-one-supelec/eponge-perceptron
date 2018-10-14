@@ -13,7 +13,8 @@ class Network :
         self.do_normalisation = normalisation # true or false
 
     def normalisation(self, Input) :
-        N = np.amax(Input)
+        # N = np.amax(Input)
+        N = 255
         if N == 0 :
             return Input
         else :
