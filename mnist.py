@@ -25,7 +25,7 @@ def learning(network, training_image, training_label, iteration, run):
     liste = list(range(len(training_image)))
     random.shuffle(liste)
     for i,e in enumerate(liste) :
-        if i % 1000 == 0 :
+        if i % 10000 == 0 :
             print("Run #{} -".format(run),"Iteration :", iteration, " - Data : ", i)
         t = [0] * 10
         t[int(training_label[e])] = 1
