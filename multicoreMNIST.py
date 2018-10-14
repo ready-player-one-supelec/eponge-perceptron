@@ -6,10 +6,10 @@ import mnist
 import numpy as np
 
 # Number of processors
-processors = 36
+processors = 70
 
 # Number of runs (for the average)
-runs = 144
+runs = 140
 
 # Times we learn on the training sample
 iterations = 200

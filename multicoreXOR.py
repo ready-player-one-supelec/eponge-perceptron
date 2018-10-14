@@ -11,10 +11,10 @@ training_image = [[0,0], [1,0], [0,1], [1,1]]
 training_label = [[0],[1],[1],[0]]
 
 # Number of processors
-processors = 36
+processors = 70
 
 # Number of runs
-runs = 144
+runs = 140
 
 # Number of iterations
 step = 100
