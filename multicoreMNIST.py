@@ -12,7 +12,7 @@ processors = 72
 runs = 144
 
 # Times we learn on the training sample
-iterations = 100
+iterations = 200
 
 
 training_image = mnist.read_idx("data/MNIST/train-images-idx3-ubyte")
