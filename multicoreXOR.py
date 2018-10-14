@@ -11,17 +11,17 @@ training_image = [[0,0], [1,0], [0,1], [1,1]]
 training_label = [[0],[1],[1],[0]]
 
 # Number of processors
-processors = 4
+processors = 72
 
 # Number of runs
-runs = 8
+runs = 144
 
 # Number of iterations
-step = 1000
+step = 100
 iterations = create_range(1000,60000,step)
 
 # Boolean : whether or not to change the learning_rate
-learning_rates_tab = create_range(0.01,0.1,0.01) # list of learning rates
+learning_rates_tab = create_range(0.01,0.2,0.005) # list of learning rates
 constant_learning_rate = len(learning_rates_tab) == 1
 
 
@@ -32,12 +32,12 @@ def doUrStuff(run, learning_rate) :
     global training_label
 
     error = [0] * len(iterations)
-    layer1 = Layer(2,2,sigmoid, sigmoid_prim, learning_rate)
-    layer2 = Layer(2,1, sigmoid, sigmoid_prim, learning_rate)
+    layer1 = Layer(2,2, regulated_tanh, regulated_tanh_prim, learning_rate)
+    layer2 = Layer(2,1, regulated_tanh, regulated_tanh_prim, learning_rate)
     network = Network([layer1,layer2], False)
 
     for i in range(len(iterations)) :
-        error[i] += xor.main(step, iterations[i], network, training_image, training_label, run, True)
+        error[i] += xor.main(step, iterations[i], network, training_image, training_label, run, True, learning_rate)
     return error
 
 def map_XOR() :

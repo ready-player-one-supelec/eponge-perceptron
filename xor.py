@@ -23,10 +23,10 @@ def map_XOR(network) :
     plt.show()
 
 
-def main(step, iteration, network, training_image, training_label, run, do_test) :
+def main(step, iteration, network, training_image, training_label, run, do_test, learning_rate) :
     liste = list(range(len(training_image)))
     random.shuffle(liste)
-    print("Run #{} -".format(run),"Iteration :", iteration)
+    print("Run #{} -".format(run),"Iteration :", iteration, " - Learning rate : ", learning_rate)
     for a in range(step) :
         for e in liste :
             network.learning(training_image[e],training_label[e])

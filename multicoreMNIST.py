@@ -6,13 +6,13 @@ import mnist
 import numpy as np
 
 # Number of processors
-processors = 8
+processors = 72
 
 # Number of runs (for the average)
-runs = 8
+runs = 144
 
 # Times we learn on the training sample
-iterations = 5
+iterations = 100
 
 
 training_image = mnist.read_idx("data/MNIST/train-images-idx3-ubyte")
