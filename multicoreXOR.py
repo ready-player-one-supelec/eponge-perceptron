@@ -8,8 +8,9 @@ from neurone import *
 import xor
 import os
 
+# IMPORTANT
 # Forcing numpy to be monothread to avoid over-threading
-os.environ['OPENBLAS_NUM_THREADS']='1'
+# DO -> export OPENBLAS_NUM_THREADS=1 before launching the script
 
 training_image = [[0,0], [1,0], [0,1], [1,1]]
 training_label = [[0],[1],[1],[0]]
