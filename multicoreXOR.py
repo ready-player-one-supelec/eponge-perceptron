@@ -11,7 +11,7 @@ training_image = [[0,0], [1,0], [0,1], [1,1]]
 training_label = [[0],[1],[1],[0]]
 
 # Number of processors
-processors = 72
+processors = 36
 
 # Number of runs
 runs = 144
