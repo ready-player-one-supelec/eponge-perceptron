@@ -6,7 +6,7 @@ import mnist
 import numpy as np
 
 # Number of processors
-processors = 4
+processors = 8
 
 # Number of runs (for the average)
 runs = 8

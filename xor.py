@@ -66,3 +66,5 @@ def graph3D(errors, iterations, learning_rates, runs, save_data) :
     fig.colorbar(surf, shrink=0.5, aspect=5)
     if save_data :
         save.save_data_for_3D_XOR(errors, iterations, learning_rates, runs, "data/Graph/graph3D_data")
+    else :
+        plt.show()
