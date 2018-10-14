@@ -40,7 +40,7 @@ def test_sample(network, image, label,run) :
         output = network.test(image[i].flatten())
         output = list(output)
         likely_number = output.index(max(output))
-        if i % 1000 == 0 :
+        if i % 10000 == 0 :
             print("Testing #{} - success :".format(run), success,"- failures :", failure)
         if likely_number == int(label[i]) :
             success += 1
