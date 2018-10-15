@@ -7,7 +7,6 @@ from outils import *
 import numpy as np
 import struct
 import matplotlib.pyplot as plt
-import random
 import save
 
 ############################################################################
@@ -21,12 +20,9 @@ def read_idx(filename):
         return np.fromstring(f.read(), dtype=np.uint8).reshape(shape).astype(np.float_)
 
 
-def learning(network, training_image, training_label, iteration, run):
-    liste = list(range(len(training_image)))
-    random.shuffle(liste)
-    for i,e in enumerate(liste) :
-        if i % 10000 == 0 :
-            print("Run #{} -".format(run),"Iteration :", iteration, " - Data : ", i)
+def learning(step, liste, network, training_image, training_label, iteration, run):
+    print("Run #{} -".format(run),"Iteration :", iteration // 60000, "Data : ", iteration % 60000)
+    for i,e in enumerate(liste[iteration : iteration + step]) :
         t = [0] * 10
         t[int(training_label[e])] = 1
         network.learning(training_image[e].flatten(),t)
@@ -37,6 +33,8 @@ def test_sample(network, image, label,run) :
     success = 0
 
     for i in range(len(image)) :
+        if i >= 1000 :
+            break
         output = network.test(image[i].flatten())
         output = list(output)
         likely_number = output.index(max(output))
@@ -73,8 +71,8 @@ def results(iterations, training_failure_rate, test_failure_rate, runs) :
 # MAIN
 #########################
 
-def main(training_image, training_label, test_image, test_label, network, iteration, run) :
-    learning(network, training_image, training_label, iteration, run)
+def main(step, liste, training_image, training_label, test_image, test_label, network, iteration, run) :
+    learning(step, liste, network, training_image, training_label, iteration, run)
     training_success, training_failure = test_sample(network, training_image, training_label, run)
     test_success, test_failure = test_sample(network, test_image, test_label, run)
     test_failure_rate = test_failure / (test_success + test_failure)

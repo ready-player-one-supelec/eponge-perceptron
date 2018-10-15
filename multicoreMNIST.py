@@ -5,19 +5,25 @@ from multiprocessing import Pool
 import mnist
 import numpy as np
 import os
+from outils import *
+import random
 
 # IMPORTANT
 # Forcing numpy to be monothread to avoid over-threading
 # DO -> export OPENBLAS_NUM_THREADS=1 before launching the script
 
 # Number of processors
-processors = 70
+processors = 3
 
 # Number of runs (for the average)
-runs = 140
+runs = 3
 
 # Times we learn on the training sample
-iterations = 200
+step = 3000 # we want to make a point even if the whole training set has not been coped with yet
+number_of_complete_iterations = 1
+iterations = create_range(step, number_of_complete_iterations * 60000, step)
+# 60000 is the bulk of the training sample,
+# so the first number is the actual number of iterations of the set
 
 
 training_image = mnist.read_idx("data/MNIST/train-images-idx3-ubyte")
@@ -35,10 +41,14 @@ def doUrStuff(run) :
     global training_failure_rate
     global iterations
     network = mnist.create_network()
-    test_failure_rate = [0] * iterations
-    training_failure_rate = [0] * iterations
-    for i in range(iterations) :
-        a,b = mnist.main(training_image, training_label, test_image, test_label, network, i, run)
+    test_failure_rate = [0] * len(iterations)
+    training_failure_rate = [0] * len(iterations)
+    liste = list(range(len(training_image)))
+    random.shuffle(liste)
+    for i in range(len(iterations)) :
+        if iterations[i] % 60000 == 0 :
+            random.shuffle(liste)
+        a,b = mnist.main(step, liste, training_image, training_label, test_image, test_label, network, iterations[i], run)
         test_failure_rate[i] += a
         training_failure_rate[i] += b
     return test_failure_rate, training_failure_rate
@@ -50,8 +60,8 @@ times = [i for i in range(1, runs + 1)]
 results = pool.map(doUrStuff, tuple(times))
 
 # Cette fois-ci global et non spécifique à un run donné
-test_failure_rate = [0] * iterations
-training_failure_rate = [0] * iterations
+test_failure_rate = [0] * len(iterations)
+training_failure_rate = [0] * len(iterations)
 
 
 for result in results :
@@ -72,4 +82,4 @@ print(test_failure_rate)
 print("-----")
 print(training_failure_rate)
 
-mnist.results([i for i in range(iterations)], training_failure_rate, test_failure_rate, runs)
+mnist.results([i / 60000 for i in iterations], training_failure_rate, test_failure_rate, runs)
