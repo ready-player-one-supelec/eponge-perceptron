@@ -22,7 +22,7 @@ def read_idx(filename):
 
 def learning(step, liste, network, training_image, training_label, iteration, run):
     print("Run #{} -".format(run),"Iteration :", iteration // 60000, "Data : ", iteration % 60000)
-    for i,e in enumerate(liste[iteration : iteration + step]) :
+    for i,e in enumerate(liste[iteration % 60000 : (iteration + step - 1)% 60000 + 1]) :
         t = [0] * 10
         t[int(training_label[e])] = 1
         network.learning(training_image[e].flatten(),t)
