@@ -38,17 +38,17 @@ def main(step, iteration, network, training_image, training_label, run, do_test,
     return np.sqrt(error)
 
 
-def graph2D(error, iterations, learning_rate, runs) :
+def graph2D(errors, iterations, learning_rates, runs) :
     # constant learning rate
     fig = plt.figure()
-    plt.plot(iterations, error, 'b-', label="Learning rate = {}".format(learning_rate))
+    for i in range(len(learning_rates)) :
+        plt.semilogy(iterations, errors[i], '-', label="Learning rate = {}".format(learning_rates[i]))
     plt.legend()
     plt.xlabel("Number of iterations")
     plt.ylabel("Euclidian norm of the error (average with {} runs)".format(runs))
-    plt.title("2D graph of the error for a XOR neural network for a constant learning rate")
+    plt.title("2D graph of the error for a XOR neural network")
     plt.savefig("data/Graph/XOR2D.png", transparent=False)
     plt.savefig("data/Graph/XOR2D_trans.png", transparent= True)
-
 
 def graph3D(errors, iterations, learning_rates, runs, save_data) :
     # changing learning rates

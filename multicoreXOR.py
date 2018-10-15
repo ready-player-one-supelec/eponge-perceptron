@@ -19,15 +19,15 @@ training_label = [[0],[1],[1],[0]]
 processors = 70
 
 # Number of runs
-runs = 140
+runs =140 
 
 # Number of iterations
-step = 100
-iterations = create_range(1000,60000,step)
+step = 1
+iterations = create_range(1,2000,step)
 
 # Boolean : whether or not to change the learning_rate
-learning_rates_tab = create_range(0.01,0.2,0.005) # list of learning rates
-constant_learning_rate = len(learning_rates_tab) == 1
+learning_rates_tab = create_range(0.03,0.08,0.01) # list of learning rates
+do3Dgraph = False
 
 
 def doUrStuff(run, learning_rate) :
@@ -71,8 +71,8 @@ def multicoreGraph() :
             error[i] /= runs
         errors.append(error)
 
-    if constant_learning_rate :
-        xor.graph2D(errors[0], iterations, learning_rates_tab[0], runs)
+    if not do3Dgraph :
+        xor.graph2D(errors, iterations, learning_rates_tab, runs)
     else :
         xor.graph3D(errors, iterations, learning_rates_tab, runs, True)
 
