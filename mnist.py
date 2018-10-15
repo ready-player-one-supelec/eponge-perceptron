@@ -46,9 +46,9 @@ def test_sample(network, image, label,run) :
 
 
 def create_network() :
-    layer1 = Layer(784, 16, regulated_tanh, regulated_tanh_prim, 0.05)
-    layer2 = Layer(16, 16, regulated_tanh, regulated_tanh_prim, 0.05)
-    layer3 = Layer(16, 10, regulated_tanh, regulated_tanh_prim, 0.05)
+    layer1 = Layer(784, 16, regulated_tanh, regulated_tanh_prim, 0.005)
+    layer2 = Layer(16, 16, regulated_tanh, regulated_tanh_prim, 0.005)
+    layer3 = Layer(16, 10, regulated_tanh, regulated_tanh_prim, 0.005)
     network = Network([layer1,layer2,layer3], normalisation = True)
     return network
 
