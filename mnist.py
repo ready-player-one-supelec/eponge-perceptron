@@ -65,8 +65,8 @@ def results(iterations, training_failure_rate, test_failure_rate, runs) :
     plt.ylabel("Average failure rate (on {} runs)".format(runs))
     plt.ylim(0,1)
     plt.title("Failure rates of the network on training and test samples ({} runs)".format(runs))
-    plt.savefig("data/Graph/MNIST_trans.png", transparent= True)
-    plt.savefig("data/Graph/MNIST.png", transparent=False)
+    plt.savefig("data/MNIST/MNIST_trans.png", transparent= True)
+    plt.savefig("data/MNIST/MNIST.png", transparent=False)
 
 
 #########################
