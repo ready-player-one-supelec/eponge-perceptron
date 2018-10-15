@@ -13,14 +13,14 @@ import random
 # DO -> export OPENBLAS_NUM_THREADS=1 before launching the script
 
 # Number of processors
-processors = 3
+processors = 70
 
 # Number of runs (for the average)
-runs = 3
+runs = 140
 
 # Times we learn on the training sample
 step = 3000 # we want to make a point even if the whole training set has not been coped with yet
-number_of_complete_iterations = 1
+number_of_complete_iterations = 50
 iterations = create_range(step, number_of_complete_iterations * 60000, step)
 # 60000 is the bulk of the training sample,
 # so the first number is the actual number of iterations of the set

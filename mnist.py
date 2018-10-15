@@ -33,8 +33,6 @@ def test_sample(network, image, label,run) :
     success = 0
 
     for i in range(len(image)) :
-        if i >= 1000 :
-            break
         output = network.test(image[i].flatten())
         output = list(output)
         likely_number = output.index(max(output))
