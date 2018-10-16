@@ -4,6 +4,7 @@
 from multiprocessing import Pool
 import mnist
 import numpy as np
+import dill as pickle
 import os
 from outils import *
 import random
@@ -13,15 +14,15 @@ import random
 # DO -> export OPENBLAS_NUM_THREADS=1 before launching the script
 
 # Number of processors
-processors = 70
+processors = 4
 
 # Number of runs (for the average)
-runs = 280
+runs = 4
 
 # Times we learn on the training sample
-step = 10000 # we want to make a point even if the whole training set has not been coped with yet
-number_of_complete_iterations = 50
-iterations = create_range(step, number_of_complete_iterations * 60000 - 1, step)
+step = 30000 # we want to make a point even if the whole training set has not been coped with yet
+number_of_complete_iterations = 5
+iterations = create_range(0, number_of_complete_iterations * 60000 - 1, step)
 # 60000 is the bulk of the training sample,
 # so the first number is the actual number of iterations of the set
 
@@ -64,22 +65,15 @@ test_failure_rate = [0] * len(iterations)
 training_failure_rate = [0] * len(iterations)
 
 
-for result in results :
-    for i in range(len(result[0])) :
-        # We make the sum on all runs
-        test_failure_rate[i] += result[0][i]
-        training_failure_rate[i] += result[1][i]
-        print(test_failure_rate)
-        print(training_failure_rate)
+test_results = [result[0] for result in results]
+training_results = [result[1] for result in results]
 
-for i in range(len(test_failure_rate)) :
-    # We want an average but only made the sum by now
-    test_failure_rate[i] /= runs
-    training_failure_rate[i] /= runs
+# We want the average and the standard deviation
+test_failure_rate = np.mean(test_results, axis=0)
+training_failure_rate = np.mean(training_results, axis=0)
+test_failure_deviation = np.std(test_results, axis=0)
+training_failure_deviation = np.std(training_results, axis=0)
 
 
-print(test_failure_rate)
-print("-----")
-print(training_failure_rate)
-
-mnist.results([i / 60000 for i in iterations], training_failure_rate, test_failure_rate, runs)
+X = {"abscisse" : [i/60000 for i in iterations], "training rate" : training_failure_rate, "test rate": test_failure_rate, "runs" : runs, "training deviation" : training_failure_deviation, "test deviation": test_failure_deviation}
+pickle.dump(X, open("tmp", "wb"))
