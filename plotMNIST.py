@@ -20,6 +20,7 @@ def plot(filename, plot_standard_deviation, period_of_std) :
     plt.ylabel("Average failure rate (on {} runs)".format(runs))
     plt.plot(iterations, training_failure_rate,'r-', label="Failure rate on the training sample")
     plt.plot(iterations, test_failure_rate, 'b-', label="Failure rate on the test sample")
+    plt.legend()
     if plot_standard_deviation :
         plt.title("Failure rates of the network on training and test samples ({} runs, Condidence level : 95%)".format(runs))
         plt.errorbar([iterations[i] for i in range(len(iterations)) if i % period_of_std == 0], [training_failure_rate[i] for i in range(len(training_failure_deviation)) if i % period_of_std == 0], [2 * training_failure_deviation[i] / math.sqrt(runs) for i in range(len(training_failure_deviation)) if i % period_of_std == 0], color="red",linestyle="None")
