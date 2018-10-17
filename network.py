@@ -27,10 +27,7 @@ class Network :
 
     def compute_F_prim(self, layer_number) :
         layer = self.layers[layer_number]
-        o = len(layer)
-        F_prim = np.zeros((o, o))
-        for i in range(len(F_prim)) :
-            F_prim[i,i] = layer.f_prim(layer.activation_level[i])
+        F_prim = np.diag(layer.f_prim(layer.activation_level))
         return F_prim
 
     def compute_sensibilities(self,error) :

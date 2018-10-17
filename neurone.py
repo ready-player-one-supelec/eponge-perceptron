@@ -23,8 +23,7 @@ class Layer :
 
     def compute(self, Input) :
         self.activation_level = np.dot(self.weights, Input) - self.bias
-        for i in range(len(self.output)) :
-            self.output[i] = self.f(self.activation_level[i])
+        self.output=self.f(self.activation_level)
 
     def __len__(self) :
         return len(self.output)
