@@ -54,7 +54,7 @@ class Network :
         delta_bias = []
         for i in range(len(self.layers)) :
             delta_bias.append( sensibilities[i] )
-
+        self.rmsprop.updateError(delta_weights, delta_bias)
         for i in range(len(self.layers)) :
             self.layers[i].update_rmsprop(delta_weights[i], delta_bias[i], self.rmsprop.returnCoefficient())
 
