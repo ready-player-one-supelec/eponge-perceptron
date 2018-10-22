@@ -31,6 +31,10 @@ class Layer :
     def update(self, delta_weights, delta_bias) :
         self.weights += delta_weights
         self.bias += delta_bias
+    
+    def update_rmsprop(self, delta_weights, delta_bias, coeff) :
+        self.weights -= coeff * self.learning_rate * delta_weights
+        self.bias -= coeff * self.learning_rate * delta_bias
 
     def set_weights(self, weights, bias) :
         for i in range(len(weights)) :
