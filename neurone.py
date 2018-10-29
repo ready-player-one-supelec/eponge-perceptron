@@ -4,28 +4,31 @@
 import numpy as np
 
 
-    def __init__(self, entry, neurones, activation, learning_rate) :
-        # entry is the number of neurones of the previous layer
-        # neurones is the number of neurones of the current layer
+class Layer:
+
+    def __init__(self, input_size, output_size, activation, learning_rate):
+        # input_size is the number of neurones of the previous layer
+        # output_size is the number of neurones of the current layer
         # activation is the activation function of this layer
 
-        sigma = 1 / np.sqrt(entry)
-
-        self.weights = np.random.normal(0, sigma, size=[neurones,entry])
-        self.bias = np.random.normal(0, sigma, size=[neurones])
+        sigma = 1 / np.sqrt(input_size)
+        self.input_size = input_size
+        self.output_size = output_size
+        self.weights = np.random.normal(0, sigma, size=[output_size, input_size])
+        self.bias = np.random.normal(0, sigma, size=[output_size])
         self.activation = activation
-        self.activation_level = np.zeros(neurones)
-        self.output = np.zeros(neurones)
+        self.activation_level = np.zeros(output_size)
+        self.output = np.zeros(output_size)
         self.learning_rate = learning_rate
 
     def compute(self, Input):
         self.activation_level = np.dot(self.weights, Input) + self.bias
         self.output = self.activation.f(self.activation_level)
 
-    def __len__(self) :
+    def __len__(self):
         return len(self.output)
 
-    def update(self, delta_weights, delta_bias) :
+    def update(self, delta_weights, delta_bias):
         self.weights += delta_weights
         self.bias += delta_bias
 

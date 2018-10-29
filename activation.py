@@ -4,16 +4,13 @@ from abc import ABC, abstractclassmethod
 
 class Activation(ABC):
 
-    def __init__(self):
-        raise NotImplemented
+    def __init__(self): ...
 
     @abstractclassmethod
-    def f(cls, x):
-        raise NotImplemented
+    def f(cls, x): ...
 
     @abstractclassmethod
-    def df(cls, x):
-        raise NotImplemented
+    def df(cls, x): ...
 
 
 class sigmoid(Activation):
