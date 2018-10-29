@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 # -*- coding:utf-8 -*-
 
-from outils import save
+import save
 import random
 import matplotlib.pyplot as plt
 # import save

@@ -2,9 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import numpy as np
-from outils import *
 
-class Layer :
 
     def __init__(self, entry, neurones, activation, learning_rate) :
         # entry is the number of neurones of the previous layer
