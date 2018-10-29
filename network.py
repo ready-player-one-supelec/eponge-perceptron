@@ -2,13 +2,15 @@
 # -*- coding:utf-8 -*-
 
 import numpy as np
+from optimiser import SGD
 
 
 class Network:
 
-    def __init__(self, layers, normalisation, optimiser=None):
+    def __init__(self, layers, normalisation, optimiser=SGD(0.035)):
         self.layers = layers
         self.do_normalisation = normalisation  # true or false
+        optimiser.initialize(self)
         self.optimiser = optimiser
 
     def normalisation(self, Input):
@@ -30,26 +32,23 @@ class Network:
         errors = []
         pre_error = -2 * (expected - output)
         for layer in reversed(self.layers):
-            errors.append(pre_error * layer.activation.df(layer.activation_level))
+            errors.append(
+                pre_error * layer.activation.df(layer.activation_level))
             pre_error = layer.weights.transpose().dot(errors[-1])
         return errors[::-1]
 
     def backpropagation(self, Input, expected_output):
         errors = self.compute_errors(expected_output, self.layers[-1].output)
 
-        delta_weights = []
-        delta_weights.append(-self.layers[0].learning_rate *
-                             np.outer(errors[0], Input))
+        grad_weights = []
+        grad_weights.append(np.outer(errors[0], Input))
         for i in range(1, len(self.layers)):
-            delta_weights.append(-self.layers[i].learning_rate *
-                                 np.outer(errors[i], self.layers[i-1].output))
+            grad_weights.append(np.outer(errors[i], self.layers[i-1].output))
 
-        delta_bias = []
+        grad_biases = []
         for i in range(len(self.layers)):
-            delta_bias.append(-self.layers[i].learning_rate * errors[i])
-
-        for i in range(len(self.layers)):
-            self.layers[i].update(delta_weights[i], delta_bias[i])
+            grad_biases.append(errors[i])
+        self.optimiser.update_weight(grad_weights, grad_biases)
 
     def learning(self, Input, expected_output):
         Input = np.array(Input)

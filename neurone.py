@@ -29,9 +29,15 @@ import numpy as np
         self.weights += delta_weights
         self.bias += delta_bias
 
-    def set_weights(self, weights, bias) :
-        for i in range(len(weights)) :
-            for j in range(len(weights[i])) :
-                self.weights[i,j] = weights[i,j]
-        for i in range(len(bias)) :
+    def add_to_weights(self, value):
+        self.weights += value
+
+    def add_to_bias(self, value):
+        self.bias += value
+
+    def set_weights(self, weights, bias):
+        for i in range(len(weights)):
+            for j in range(len(weights[i])):
+                self.weights[i, j] = weights[i, j]
+        for i in range(len(bias)):
             self.bias[i] = bias[i]
