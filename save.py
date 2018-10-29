@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 # -*- coding:utf-8 -*-
 
-import dill as pickle
+import pickle as pickle
 from network import *
 import xor
 from neurone import *
