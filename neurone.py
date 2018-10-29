@@ -20,9 +20,9 @@ class Layer :
         self.output = np.zeros(neurones)
         self.learning_rate = learning_rate
 
-    def compute(self, Input) :
-        self.activation_level = np.dot(self.weights, Input) - self.bias
-        self.output=self.activation.f(self.activation_level)
+    def compute(self, Input):
+        self.activation_level = np.dot(self.weights, Input) + self.bias
+        self.output = self.activation.f(self.activation_level)
 
     def __len__(self) :
         return len(self.output)
