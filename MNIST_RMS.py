@@ -8,6 +8,7 @@ from outils import read_idx
 from random import shuffle
 from concurrent.futures import ProcessPoolExecutor, Future
 import csv
+from datetime import datetime
 
 training_images = read_idx("data/MNIST/train-images-idx3-ubyte")
 training_labels = read_idx("data/MNIST/train-labels-idx1-ubyte")
@@ -97,22 +98,25 @@ def run(name, nb_batch, network):
 def multi_run():
     n_runs = 2
     nb_batchs = 2
+    now = datetime.now()
     with ProcessPoolExecutor(max_workers=N_CPUS) as executor:
         results_sgd = []
+        params_SGD = (0.003,)
+        params_RMS = (0.003, 0.9, 10**(-8))
         for i in range(n_runs):
-            network = create_SGD_network(0.003)
+            network = create_SGD_network(*params_SGD)
             results_sgd.append(executor.submit(
                 run, f"sgd {i}", nb_batchs, network))
         results_rms = []
         for i in range(n_runs):
-            network = create_RMS_network(0.003, 0.9, 10**(-8))
+            network = create_RMS_network(*params_RMS)
             results_rms.append(executor.submit(
                 run, f"rms {i}", nb_batchs, network))
         results_sgd = list(map(Future.result, results_sgd))
         results_rms = [result.result() for result in results_rms]
-    save_to_csv('data/RMS2prop.csv',
+    save_to_csv(f'data/RMSprop-{params_RMS}-runs{n_runs}-nbatch{nb_batchs}-{now}.csv',
                 results_rms[0][0], (res[1] for res in results_rms))
-    save_to_csv('data/SGD2.csv',
+    save_to_csv(f'data/SGD-{params_SGD}-runs{n_runs}-nbatch{nb_batchs}-{now}.csv',
                 results_sgd[0][0], (res[1] for res in results_sgd))
 
 
