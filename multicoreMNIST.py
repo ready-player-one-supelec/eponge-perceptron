@@ -4,7 +4,7 @@
 from multiprocessing import Pool
 import mnist
 import numpy as np
-import dill as pickle
+import pickle as pickle
 from outils import create_range
 import random
 
@@ -16,7 +16,7 @@ import random
 processors = 4
 
 # Number of runs (for the average)
-runs = 4
+runs = 20
 
 # Times we learn on the training sample
 step = 30000  # we want to make a point even if the whole training set has not been coped with yet

@@ -4,6 +4,7 @@
 from network import Network
 from neurone import Layer
 import activation
+import optimiser as opt
 import numpy as np
 import struct
 
@@ -47,10 +48,11 @@ def test_sample(network, image, label, run):
 
 
 def create_network(learning_rate):
-    layer1 = Layer(784, 16, activation.regulated_tanh, learning_rate)
-    layer2 = Layer(16, 16, activation.regulated_tanh, learning_rate)
-    layer3 = Layer(16, 10, activation.regulated_tanh, learning_rate)
-    network = Network([layer1, layer2, layer3], normalisation=True)
+    network = Network([
+        Layer(784, 16, activation.regulated_tanh),
+        Layer(16, 16, activation.regulated_tanh),
+        Layer(16, 10, activation.regulated_tanh)
+    ], normalisation=True, optimiser=opt.SGD(learning_rate))
     return network
 
 

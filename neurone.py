@@ -6,7 +6,7 @@ import numpy as np
 
 class Layer:
 
-    def __init__(self, input_size, output_size, activation, learning_rate):
+    def __init__(self, input_size, output_size, activation):
         # input_size is the number of neurones of the previous layer
         # output_size is the number of neurones of the current layer
         # activation is the activation function of this layer
@@ -19,7 +19,6 @@ class Layer:
         self.activation = activation
         self.activation_level = np.zeros(output_size)
         self.output = np.zeros(output_size)
-        self.learning_rate = learning_rate
 
     def compute(self, Input):
         self.activation_level = np.dot(self.weights, Input) + self.bias
