@@ -7,11 +7,12 @@ from optimiser import SGD
 
 class Network:
 
-    def __init__(self, layers, normalisation, optimiser=SGD(0.035)):
+    def __init__(self, layers, normalisation, optimiser=SGD(0.035), name=""):
         self.layers = layers
         self.do_normalisation = normalisation  # true or false
         optimiser.initialize(self)
         self.optimiser = optimiser
+        self.name = name
 
     def normalisation(self, Input):
         # N = np.amax(Input)
@@ -64,3 +65,14 @@ class Network:
             Input = self.normalisation(Input)
         self.feed_forward(Input)
         return self.layers[-1].output
+
+    def __str__(self):
+        if self.name:
+            string = f'{self.name}-'
+        else:
+            string = ''
+        string += f'{self.layers[0].input_size}'
+        for layer in self.layers:
+            string += 'x' + str(layer)
+        string += '-' + str(self.optimiser)
+        return string

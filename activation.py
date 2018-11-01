@@ -12,8 +12,12 @@ class Activation(ABC):
     @abstractclassmethod
     def df(cls, x): ...
 
+    @classmethod
+    def __str__(cls):
+        return 'Abstract activation'
 
-class sigmoid(Activation):
+
+class Sigmoid(Activation):
     @classmethod
     def f(cls, x):
         return 1 / (1 + np.exp(-x))
@@ -22,8 +26,12 @@ class sigmoid(Activation):
     def df(cls, x):
         return cls.f(x) * (1 - cls.f(x))
 
+    @classmethod
+    def __str__(cls):
+        return 'sigmoid'
 
-class tanh(Activation):
+
+class Tanh(Activation):
     @classmethod
     def f(cls, x):
         return np.tanh(x)
@@ -32,8 +40,12 @@ class tanh(Activation):
     def df(cls, x):
         return 1 - (cls.f(x) ** 2)
 
+    @classmethod
+    def __str__(cls):
+        return 'tanh'
 
-class regulated_tanh(Activation):
+
+class Regulated_tanh(Activation):
     @classmethod
     def f(cls, x):
         return 1.7159 * np.tanh(x * (2.0 / 3.0))
@@ -42,8 +54,12 @@ class regulated_tanh(Activation):
     def df(cls, x):
         return 1.7159 * (2.0 / 3.0) * (1 - (np.tanh(x * (2.0 / 3.0)) ** 2))
 
+    @classmethod
+    def __str__(cls):
+        return 'rtanh'
 
-class softmax(Activation):
+
+class Softmax(Activation):
     @classmethod
     def f(cls, x):
         # needed to not overflow on great inputs, does not change the result
@@ -56,3 +72,13 @@ class softmax(Activation):
     def df(cls, x):
         tmp = cls.f(x)
         return tmp - tmp**2
+
+    @classmethod
+    def __str__(cls):
+        return 'softmax'
+
+
+tanh = Tanh()
+sigmoid = Sigmoid()
+regulated_tanh = Regulated_tanh()
+softmax = Softmax()

@@ -43,3 +43,6 @@ class Layer:
                 self.weights[i, j] = weights[i, j]
         for i in range(len(bias)):
             self.bias[i] = bias[i]
+
+    def __str__(self):
+        return f'{self.output_size}-{self.activation}'

@@ -12,6 +12,9 @@ class Optimiser(ABC):
     @abstractmethod
     def update_weight(self, gradient_weights, gradient_biases): ...
 
+    @abstractmethod
+    def __str__(self): ...
+
 
 class SGD(Optimiser):
     def __init__(self, learning_rate):
@@ -28,6 +31,9 @@ class SGD(Optimiser):
 
     def initialize(self, network):
         self.network = network
+
+    def __str__(self):
+        return f'SGD-η{self.learning_rate}'
 
 
 class RMSprop(Optimiser):
@@ -66,3 +72,21 @@ class RMSprop(Optimiser):
             # apply the update
             self.network.layers[i].add_to_weights(-update_matrix)
             self.network.layers[i].add_to_bias(-update_bias)
+
+    def __str__(self):
+        return f'RMSprop-η{self.learning_rate}β{self.decay}'
+
+
+# TODO
+class Adam(Optimiser):
+    def __init__(self, learning_rate, decay1=0.9, decay2=0.999, epsilon=10**(-8)):
+        self.learning_rate = learning_rate
+        self.decay1 = decay1
+        self.decay2 = decay2
+        self.epsilon = epsilon
+
+    def initialize(self, network):
+        self.network = network
+
+    def __str__(self):
+        raise NotImplementedError()
