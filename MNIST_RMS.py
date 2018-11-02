@@ -9,13 +9,16 @@ from random import shuffle
 from concurrent.futures import ProcessPoolExecutor
 import csv
 from datetime import datetime
+from os import cpu_count
 
 training_images = read_idx("data/MNIST/train-images-idx3-ubyte")
 training_labels = read_idx("data/MNIST/train-labels-idx1-ubyte")
 test_images = read_idx("data/MNIST/t10k-images-idx3-ubyte")
 test_labels = read_idx("data/MNIST/t10k-labels-idx1-ubyte")
 
-N_CPUS = 4
+N_CPUS = cpu_count()
+if N_CPUS is None:
+    N_CPUS = 4
 
 
 def save_to_csv(filename, legend, results_list):
