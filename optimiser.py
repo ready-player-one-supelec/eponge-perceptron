@@ -33,7 +33,7 @@ class SGD(Optimiser):
         self.network = network
 
     def __str__(self):
-        return f'SGD-η{self.learning_rate}'
+        return f'SGD-η={self.learning_rate}'
 
 
 class RMSprop(Optimiser):
@@ -52,29 +52,27 @@ class RMSprop(Optimiser):
 
     def update_weight(self, gradient_weights, gradient_biases):
         for i in range(len(self.network.layers)):
-            RMS_matrix = self.RMS_matrices[i]
-            RMS_bias = self.RMS_biases[i]
 
             # update the RMS moving average
-            RMS_matrix = self.decay * RMS_matrix + \
+            self.RMS_matrices[i] = self.decay * self.RMS_matrices[i] + \
                 (1 - self.decay) * (gradient_weights[i]**2)
-            RMS_bias = self.decay * RMS_bias + \
+            self.RMS_biases[i] = self.decay * self.RMS_biases[i] + \
                 (1 - self.decay) * (gradient_biases[i]**2)
-            self.RMS_matrices[i] = RMS_matrix
-            self.RMS_biases[i] = RMS_bias
 
             # compute the weight update
-            update_matrix = self.learning_rate * \
-                gradient_weights[i] / (RMS_matrix + self.epsilon)**(1/2)
-            update_bias = self.learning_rate * \
-                gradient_biases[i] / (RMS_bias + self.epsilon)**(1/2)
+            update_matrix = -self.learning_rate * \
+                gradient_weights[i] / \
+                ((self.RMS_matrices[i] + self.epsilon)**(1/2))
+            update_bias = -self.learning_rate * \
+                gradient_biases[i] / \
+                ((self.RMS_biases[i] + self.epsilon)**(1/2))
 
             # apply the update
-            self.network.layers[i].add_to_weights(-update_matrix)
-            self.network.layers[i].add_to_bias(-update_bias)
+            self.network.layers[i].add_to_weights(update_matrix)
+            self.network.layers[i].add_to_bias(update_bias)
 
     def __str__(self):
-        return f'RMSprop-η{self.learning_rate}β{self.decay}'
+        return f'RMSprop-η={self.learning_rate}β={self.decay}'
 
 
 # TODO
@@ -86,7 +84,41 @@ class Adam(Optimiser):
         self.epsilon = epsilon
 
     def initialize(self, network):
+        self.m = []
+        self.v = []
         self.network = network
+        for layer in network.layers:
+            self.m.append({
+                'matrix': np.zeros_like(layer.weights),
+                'bias': np.zeros_like(layer.bias)
+            })
+            self.v.append({
+                'matrix': np.zeros_like(layer.weights),
+                'bias': np.zeros_like(layer.bias)
+            })
+
+    def update_weight(self, gradient_weights, gradient_biases):
+        for i in range(len(self.network.layers)):
+            self.m[i]['matrix'] = self.decay1 * self.m[i]['matrix'] + \
+                (1 - self.decay1) * (gradient_weights[i])
+            self.m[i]['bias'] = self.decay1 * self.m[i]['bias'] + \
+                (1 - self.decay1) * (gradient_biases[i])
+
+            self.v[i]['matrix'] = self.decay2 * self.v[i]['matrix'] + \
+                (1 - self.decay2) * (gradient_weights[i]**2)
+            self.v[i]['bias'] = self.decay2 * self.v[i]['bias'] + \
+                (1 - self.decay2) * (gradient_biases[i]**2)
+
+            factor = -self.learning_rate * \
+                ((1 - self.decay2)**0.5) / (1 - self.decay1)
+            epsilon = self.epsilon * ((1 - self.decay2)**0.5)
+            update_matrix = factor * \
+                self.m[i]['matrix'] / (self.v[i]['matrix']**(0.5) + epsilon)
+            update_bias = factor * \
+                self.m[i]['bias'] / (self.v[i]['bias']**(0.5) + epsilon)
+
+            self.network.layers[i].add_to_weights(update_matrix)
+            self.network.layers[i].add_to_bias(update_bias)
 
     def __str__(self):
-        raise NotImplementedError()
+        return f"ADAM-η={self.learning_rate}β1={self.decay1}β2={self.decay2}"
