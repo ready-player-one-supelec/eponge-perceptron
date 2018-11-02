@@ -25,26 +25,44 @@ def save_to_csv(filename, legend, results_list):
         csv_writer.writerows(results_list)
 
 
-def create_SGD_builder(learning_rate):
+def create_SGD_builder(learning_rate, size=(16, 16)):
     def builder():
-        network = Network([
-            Layer(784, 16, act.regulated_tanh),
-            Layer(16, 16, act.regulated_tanh),
-            Layer(16, 10, act.regulated_tanh)
-        ], normalisation=True, optimiser=opt.SGD(learning_rate))
+        layers = [
+            Layer(784, size[0], act.regulated_tanh),
+            *(Layer(s_in, s_out, act.regulated_tanh)
+              for s_in, s_out in zip(size, size[1:])),
+            Layer(size[-1], 10, act.regulated_tanh)
+        ]
+        network = Network(layers, normalisation=True,
+                          optimiser=opt.SGD(learning_rate))
         return network
     return builder
 
 
-def create_RMS_builder(learning_rate, decay, epsilon=10**(-8)):
+def create_Adam_builder(learning_rate, size=(16, 16)):
     def builder():
-        network = Network([
-            Layer(784, 16, act.regulated_tanh),
-            Layer(16, 16, act.regulated_tanh),
-            Layer(16, 10, act.regulated_tanh)
-        ], normalisation=True,
-            optimiser=opt.RMSprop(learning_rate, decay, epsilon=epsilon)
-        )
+        layers = [
+            Layer(784, size[0], act.regulated_tanh),
+            *(Layer(s_in, s_out, act.regulated_tanh)
+              for s_in, s_out in zip(size, size[1:])),
+            Layer(size[-1], 10, act.regulated_tanh)
+        ]
+        network = Network(layers, normalisation=True,
+                          optimiser=opt.Adam(learning_rate))
+        return network
+    return builder
+
+
+def create_RMS_builder(learning_rate, decay, epsilon=10**(-8), size=(16, 16)):
+    def builder():
+        layers = [
+            Layer(784, size[0], act.regulated_tanh),
+            *(Layer(s_in, s_out, act.regulated_tanh)
+              for s_in, s_out in zip(size, size[1:])),
+            Layer(size[-1], 10, act.regulated_tanh)
+        ]
+        network = Network(layers, normalisation=True, optimiser=opt.RMSprop(
+            learning_rate, decay, epsilon=epsilon))
         return network
     return builder
 
@@ -124,7 +142,10 @@ def multi_run(network_builders, n_runs, nb_batchs):
 if __name__ == "__main__":
     multi_run([
         create_SGD_builder(0.003),
-        create_RMS_builder(0.003, 0.9, 10**(-8))
+        create_RMS_builder(0.001, 0.9),
+        create_Adam_builder(0.001),
+        create_Adam_builder(0.001, size=(300, 50)),
+        create_SGD_builder(0.001, size=(300, 50))
     ],
         n_runs=1, nb_batchs=0
     )

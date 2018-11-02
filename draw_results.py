@@ -35,7 +35,6 @@ for filename in filenames:
     with open(filename, 'r') as f:
         csv_reader = csv.reader(f)
         results = list(csv_reader)
-        print([i for i, x in enumerate(results) if len(x) != len(results[0])])
         results = np.array(results).astype(np.float)
     if X:
         x = results[0]
@@ -47,7 +46,7 @@ for filename in filenames:
     std = np.std(results, axis=0)
     confidence = std * 2.0 / (len(std)**(0.5))
     print(len(results))
-
+    print(confidence)
     plt.errorbar(x, mean, yerr=confidence)
 
 plt.legend(args.plotnames)
