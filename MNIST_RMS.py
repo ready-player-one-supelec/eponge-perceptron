@@ -6,7 +6,7 @@ import activation as act
 from outils import read_idx
 
 from random import shuffle
-from concurrent.futures import ProcessPoolExecutor, Future
+from concurrent.futures import ProcessPoolExecutor
 import csv
 from datetime import datetime
 
@@ -25,22 +25,28 @@ def save_to_csv(filename, legend, results_list):
         csv_writer.writerows(results_list)
 
 
-def create_SGD_network(learning_rate):
-    network = Network([
-        Layer(784, 16, act.regulated_tanh),
-        Layer(16, 16, act.regulated_tanh),
-        Layer(16, 10, act.regulated_tanh)
-    ], normalisation=True, optimiser=opt.SGD(learning_rate))
-    return network
+def create_SGD_builder(learning_rate):
+    def builder():
+        network = Network([
+            Layer(784, 16, act.regulated_tanh),
+            Layer(16, 16, act.regulated_tanh),
+            Layer(16, 10, act.regulated_tanh)
+        ], normalisation=True, optimiser=opt.SGD(learning_rate))
+        return network
+    return builder
 
 
-def create_RMS_network(learning_rate, decay, epsilon=10**(-8)):
-    network = Network([
-        Layer(784, 16, act.regulated_tanh),
-        Layer(16, 16, act.regulated_tanh),
-        Layer(16, 10, act.regulated_tanh)
-    ], normalisation=True, optimiser=opt.RMSprop(learning_rate, decay, epsilon=epsilon))
-    return network
+def create_RMS_builder(learning_rate, decay, epsilon=10**(-8)):
+    def builder():
+        network = Network([
+            Layer(784, 16, act.regulated_tanh),
+            Layer(16, 16, act.regulated_tanh),
+            Layer(16, 10, act.regulated_tanh)
+        ], normalisation=True,
+            optimiser=opt.RMSprop(learning_rate, decay, epsilon=epsilon)
+        )
+        return network
+    return builder
 
 
 def train(network, training_images, training_labels, indices):
@@ -95,30 +101,30 @@ def run(name, nb_batch, network):
 # results = run(1, 3, network)
 # print(results[1])
 
-def multi_run():
-    n_runs = 2
-    nb_batchs = 2
+def multi_run(network_builders, n_runs, nb_batchs):
     now = datetime.now()
     with ProcessPoolExecutor(max_workers=N_CPUS) as executor:
-        results_sgd = []
-        params_SGD = (0.003,)
-        params_RMS = (0.003, 0.9, 10**(-8))
-        for i in range(n_runs):
-            network = create_SGD_network(*params_SGD)
-            results_sgd.append(executor.submit(
-                run, f"sgd {i}", nb_batchs, network))
-        results_rms = []
-        for i in range(n_runs):
-            network = create_RMS_network(*params_RMS)
-            results_rms.append(executor.submit(
-                run, f"rms {i}", nb_batchs, network))
-        results_sgd = list(map(Future.result, results_sgd))
-        results_rms = [result.result() for result in results_rms]
-    save_to_csv(f'data/RMSprop-{params_RMS}-runs{n_runs}-nbatch{nb_batchs}-{now}.csv',
-                results_rms[0][0], (res[1] for res in results_rms))
-    save_to_csv(f'data/SGD-{params_SGD}-runs{n_runs}-nbatch{nb_batchs}-{now}.csv',
-                results_sgd[0][0], (res[1] for res in results_sgd))
+        results_list = [[] for _ in network_builders]
+        names = ['' for _ in network_builders]
+        for p, (network_builder, results) in enumerate(
+            zip(network_builders, results_list)
+        ):
+            for i in range(n_runs):
+                network = network_builder()
+                results.append(executor.submit(
+                    run, f"{network} {i}", nb_batchs, network))
+            names[p] = str(network)
+        for results, name in zip(results_list, names):
+            print(name)
+            results = [result.result() for result in results]
+            save_to_csv(f'data/{name}-{str(now).replace(" ", "")}.csv',
+                        results[0][0], (res[1] for res in results))
 
 
 if __name__ == "__main__":
-    multi_run()
+    multi_run([
+        create_SGD_builder(0.003),
+        create_RMS_builder(0.003, 0.9, 10**(-8))
+    ],
+        n_runs=1, nb_batchs=0
+    )
